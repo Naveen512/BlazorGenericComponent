@@ -1,0 +1,35 @@
+﻿@page "/"
+@inject ICakeLogic _cakeLogic
+<ShowItems Items="Cakes" >
+    <ShowTemplate Context="CakeContext">
+        <div class="card text-center">
+            <div class="card-header">
+                Cake Token Id - @CakeContext.Id
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">@CakeContext.Name</h5>
+                <p class="card-text">Price $@CakeContext.Cost</p>
+            </div>
+            <div class="card-footer text-muted">
+                Click Here
+            </div>
+        </div>
+    </ShowTemplate>
+</ShowItems>
+
+@code{
+    public List<Cake> Cakes { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await LoadCakes();
+        StateHasChanged();
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    public async Task LoadCakes()
+    {
+        var result = await _cakeLogic.GetAll();
+        Cakes = result.ToList();
+    }
+}
